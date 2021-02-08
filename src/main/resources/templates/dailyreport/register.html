@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登録画面</title>
+</head>
+<body>
+<h1>日報作成</h1>
+<div class="report-content">
+    <form name="registerForm" th:action="${'/dailyreport/register/'}" th:method="POST">
+        <div class="date-calender-wrapper">
+            <input type="date" name="date" th:value="${@viewHelper.formatDateSimply(now)}" />
+        </div>
+        <div class="done-content-wrapper">
+            <label>本日行ったこと</label>
+            <input type="text" name="doneContent" placeholder="本日行った作業を詳しく書いてください" />
+        </div>
+        <div class="memo-wrapper">
+            <label>報告・連絡</label>
+            <input type="text" name="memo" placeholder="連絡事項等" />
+        </div>
+
+        <div class="submit-button-wrapper">
+            <a id="submit-button" href="#">提出する</a>
+        </div>
+        <th:block th:if="${error}">
+            <span class="error" th:text="${error}"></span>
+        </th:block>
+    </form>
+</div>
+</body>
+
+<!-- webpack 使いたい -->
+<script type="text/javascript">
+    document.getElementById("submit-button").addEventListener("click", function() {
+      const result = confirm("投稿してもよいですか？");
+      if (!result) {
+        return
+      }
+      document.registerForm.submit();
+    })
+</script>
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>一覧画面</title>
+</head>
+<body>
+<h1>DailyReport List</h1>
+<div class="register-report">
+    <a th:href="${'/dailyreport/register/'}">新規作成</a>
+</div>
+<div class="reports">
+    <table class="reports-table">
+        <tr>
+            <th>ID</th>
+            <th>日付</th>
+            <th>やったこと</th>
+            <th>作成日</th>
+        </tr>
+        <tr th:each="report : ${reports}" th:object="${report}">
+            <td th:text="*{id}"></td>
+            <td th:text="*{@viewHelper.formatDateSimply(date)}"></td>
+            <td th:text="*{doneContent}"></td>
+            <td th:text="*{@viewHelper.formatDateSimply(createdAt)}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
