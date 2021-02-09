@@ -13,7 +13,7 @@ class DatabaseConfig {
     //TODO: yaml から取得するようにする
     //TODO: HikariCP をかませたい
     fun getConnection(): Database = Database.connect(
-        "jdbc:mysql://localhost:3306/dailywriter?serverTimezone=JST", //environment.getRequiredProperty("database.url"),
+        "jdbc:mysql://18.219.85.109:3306/dailywriter?serverTimezone=JST", //environment.getRequiredProperty("database.url"),
         "com.mysql.cj.jdbc.Driver",             //environment.getRequiredProperty("database.driver-class-name"),
         "admin",                                 //environment.getRequiredProperty("database.username"),
         "admin_password",                   //environment.getRequiredProperty("database.password")

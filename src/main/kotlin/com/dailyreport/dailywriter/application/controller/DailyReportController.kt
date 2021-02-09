@@ -3,6 +3,7 @@ package com.dailyreport.dailywriter.application.controller
 import com.dailyreport.dailywriter.application.constant.TemplateMapping
 import com.dailyreport.dailywriter.application.form.DailyReportRegisterForm
 import com.dailyreport.dailywriter.application.repository.DailyReportRepository
+import com.dailyreport.dailywriter.application.service.SlackNotificationService
 import com.dailyreport.dailywriter.config.DatabaseConfig
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -21,7 +22,8 @@ import java.time.LocalDate
 @RequestMapping("/dailyreport")
 class DailyReportController(
     databaseConfig: DatabaseConfig,
-    private val dailyReportRepository: DailyReportRepository
+    private val dailyReportRepository: DailyReportRepository,
+    private val slackNotificationService: SlackNotificationService
 ) {
     init {
         databaseConfig.getConnection()
@@ -41,29 +43,6 @@ class DailyReportController(
         return TemplateMapping.DAILY_REPORT_REGISTER.value
     }
 
-    @GetMapping("register/completed/")
-    fun getCompleted(model: Model): String {
-        model.addAttribute("now", LocalDateTime.now())
-
-        return TemplateMapping.DAILY_REPORT_COMPLETED.value
-    }
-
-    @GetMapping("/configuration/")
-    fun getconfiguration(model: Model): String {
-        model.addAttribute("now", LocalDateTime.now())
-
-        return TemplateMapping.DAILY_REPORT_CONFIGURATION.value
-
-    }
-
-    @GetMapping("/newcreate/")
-    fun getnewcreate(model: Model): String {
-        model.addAttribute("now", LocalDateTime.now())
-
-        return TemplateMapping.DAILY_REPORT_NEWCREATE.value
-
-    }
-
     @PostMapping("/register/")
     fun postRegister(
         redirectAttributes: RedirectAttributes,
@@ -71,15 +50,17 @@ class DailyReportController(
         bindingResult: BindingResult
     ): String {
         val date: LocalDate = registerForm.date ?: return "redirect:/dailyreport/register/".also { redirectAttributes.addFlashAttribute("error","日時が指定されていません") }
-        val doneContent: String = registerForm.doneContent ?: return "redirect:/dailyreport/register/".also { redirectAttributes.addFlashAttribute("error","本日行ったことが入力されていません")}
+        val doneContent: String = registerForm.doneContent ?: return "redirect:/dailyreport/register/".also { redirectAttributes.addFlashAttribute("error","本日行ったことが入力されていません") }
         val memo: String? = registerForm.memo
 
-        dailyReportRepository.insert(
+        this.dailyReportRepository.insert(
             date,
             doneContent,
             memo
         )
 
-        return "redirect:/dailyreport/"
+        this.slackNotificationService.sendDailyreportRegisterNotification(date, doneContent, memo)
+
+        return "redirect:/dailyreport/".also { redirectAttributes.addFlashAttribute("registered", true) }
     }
 }

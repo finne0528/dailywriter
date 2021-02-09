@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1>DailyReport List</h1>
+<th:block th:if="${registered}">
+    <span class="success">日報を登録しました</span>
+</th:block>
 <div class="register-report">
     <a th:href="${'/dailyreport/register/'}">新規作成</a>
 </div>
@@ -25,5 +28,10 @@
         </tr>
     </table>
 </div>
+<style>
+    .success {
+        color: #2a9d09;
+    }
+</style>
 </body>
 </html>

@@ -34,6 +34,7 @@ dependencies {
 	implementation("org.jetbrains.exposed:exposed-jdbc:0.25.1")
 	implementation("org.jetbrains.exposed:exposed-java-time:0.25.1")
 	runtimeOnly("mysql:mysql-connector-java")
+	implementation("com.squareup.okhttp3:okhttp:4.9.1")
 }
 
 tasks.withType<KotlinCompile> {
