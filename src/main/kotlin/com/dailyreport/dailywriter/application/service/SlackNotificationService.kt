@@ -17,9 +17,9 @@ class SlackNotificationService {
     private val httpClient: OkHttpClient = OkHttpClient.Builder().build()
 
     fun sendDailyreportRegisterNotification(date: LocalDate, doneContent: String, memo: String? = null) {
-        //TODO: webhook url は設定できるようにしたい
+        //TODO: webhook url は yaml とかで設定できるようにしたい（時間がなくてできん）
         val request: Request = Request.Builder()
-            .url("https://hooks.slack.com/services/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")
+            .url("replace to your slack webhook url here.")
             .post(buildPostJson(date, doneContent, memo).toRequestBody("application/json; charset=utf-8".toMediaType()))
             .build()
 
@@ -29,8 +29,10 @@ class SlackNotificationService {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    TODO("Not yet implemented")
+                response.use { res ->
+                    if (!res.isSuccessful) {
+                        TODO("Not yet implemented")
+                    }
                 }
             }
         })
